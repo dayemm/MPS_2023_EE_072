@@ -1,1 +1,0 @@
-.\firstexp.o: firstexp.s
