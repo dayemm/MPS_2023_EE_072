@@ -1,0 +1,22 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+E:\5TH SEMESTER\MPS LAB\CHAUDHARY\exppp5.uvproj
+Project File Date:  10/28/2025
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling startup_TM4C123.s...
+compiling chaudary.c...
+linking...
+Program Size: Code=728 RO-data=636 RW-data=0 ZI-data=608  
+".\exppp5.axf" - 0 Errors, 0 Warning(s).
+Load "E:\\5TH SEMESTER\\MPS LAB\\CHAUDHARY\\exppp5.axf" 
+Internal DLL Error
+Load "E:\\5TH SEMESTER\\MPS LAB\\CHAUDHARY\\exppp5.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.

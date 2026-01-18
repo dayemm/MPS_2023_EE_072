@@ -1,0 +1,9 @@
+.\chaudary.o: chaudary.c
+.\chaudary.o: E:\ARM\Inc\TI\TM4C123\TM4C123.h
+.\chaudary.o: E:\ARM\Inc\TI\TM4C123\TM4C123GH6PM.h
+.\chaudary.o: E:\ARM\CMSIS\Include\core_cm4.h
+.\chaudary.o: E:\ARM\ARMCC\bin\..\include\stdint.h
+.\chaudary.o: E:\ARM\CMSIS\Include\core_cmInstr.h
+.\chaudary.o: E:\ARM\CMSIS\Include\core_cmFunc.h
+.\chaudary.o: E:\ARM\CMSIS\Include\core_cm4_simd.h
+.\chaudary.o: E:\ARM\Inc\TI\TM4C123\system_TM4C123.h

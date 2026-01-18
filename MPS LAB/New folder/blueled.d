@@ -1,0 +1,9 @@
+.\blueled.o: blueled.c
+.\blueled.o: E:\ARM\Inc\TI\TM4C123\TM4C123.h
+.\blueled.o: E:\ARM\Inc\TI\TM4C123\TM4C123GH6PM.h
+.\blueled.o: E:\ARM\CMSIS\Include\core_cm4.h
+.\blueled.o: E:\ARM\ARMCC\bin\..\include\stdint.h
+.\blueled.o: E:\ARM\CMSIS\Include\core_cmInstr.h
+.\blueled.o: E:\ARM\CMSIS\Include\core_cmFunc.h
+.\blueled.o: E:\ARM\CMSIS\Include\core_cm4_simd.h
+.\blueled.o: E:\ARM\Inc\TI\TM4C123\system_TM4C123.h

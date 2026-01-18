@@ -1,0 +1,306 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 PRESERVE8
+    2 00000000                 THUMB
+    3 00000000         
+    4 00000000         ;==================== DATA ====================
+    5 00000000                 AREA             MyData, DATA, READWRITE
+    6 00000000         
+    7 00000000         ; test data (bytes)
+    8 00000000 0C 23 30 
+              44 62 19 
+              42 29 5A 
+              4C 23 54 
+              58 4C 4B 
+              47 37 3F 
+              3A 32 46 Marks   DCB              12,35,48,68,98,25,66,41,90,76,3
+5,84,88,76,75,71,55,63,58,50,70
+    9 00000015 00000015 
+                       LEN     EQU              21
+   10 00000015         
+   11 00000015         ; output variables (word each)
+   12 00000015 00 00 00 
+              00       CountGT70
+                               SPACE            4
+   13 00000019 00 00 00 
+              00       Count50to70
+                               SPACE            4
+   14 0000001D         
+   15 0000001D         ;==================== CODE ====================
+   16 0000001D                 AREA             |.text|, CODE, READONLY
+   17 00000000                 EXPORT           main
+   18 00000000                 ENTRY
+   19 00000000         
+   20 00000000         ; ------------ main ------------
+   21 00000000         main
+   22 00000000         ; call: COUNT_GT70(ptr=len list, len)
+   23 00000000 4817            LDR              R0, =Marks
+   24 00000002 F04F 0115       MOV              R1, #LEN
+   25 00000006 F7FF FFFE       BL               COUNT_GT70
+   26 0000000A         ; R0 = count > 70
+   27 0000000A 4A16            LDR              R2, =CountGT70
+   28 0000000C 6010            STR              R0, [R2]
+   29 0000000E         
+   30 0000000E         ; call: COUNT_50_70(ptr=len list, len)
+   31 0000000E 4814            LDR              R0, =Marks
+   32 00000010 F04F 0115       MOV              R1, #LEN
+   33 00000014 F7FF FFFE       BL               COUNT_50_70
+   34 00000018         ; R0 = count in [50..70]
+   35 00000018 4A13            LDR              R2, =Count50to70
+   36 0000001A 6010            STR              R0, [R2]
+   37 0000001C         
+   38 0000001C E7FE    STOP    B                STOP        ; hang here for deb
+                                                            ugger
+   39 0000001E         
+   40 0000001E         ; ------------ COUNT_GT70 ------------
+   41 0000001E         ; R0 = pointer to array (bytes)
+   42 0000001E         ; R1 = length (elements)
+   43 0000001E         ; returns R0 = count of elements > 70
+   44 0000001E         COUNT_GT70
+                               PROC
+   45 0000001E F04F 0300       MOV              R3, #0      ; R3 = count
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   46 00000022         GT_Loop
+   47 00000022 2900            CMP              R1, #0
+   48 00000024 D009            BEQ              GT_Done
+   49 00000026 F810 2B01       LDRB             R2, [R0], #1 ; load byte and po
+                                                            st-increment ptr
+   50 0000002A 2A46            CMP              R2, #70
+   51 0000002C D802            BHI              GT_Inc      ; > 70 ?
+   52 0000002E         ; not greater
+   53 0000002E         GT_Next
+   54 0000002E 1E49            SUBS             R1, R1, #1
+   55 00000030 D1F7            BNE              GT_Loop
+   56 00000032 E002            B                GT_Done
+   57 00000034         GT_Inc
+   58 00000034 F103 0301       ADD              R3, R3, #1
+   59 00000038 E7F9            B                GT_Next
+   60 0000003A         
+   61 0000003A         GT_Done
+   62 0000003A 4618            MOV              R0, R3      ; return value in R
+                                                            0
+   63 0000003C 4770            BX               LR
+   64 0000003E                 ENDP
+   65 0000003E         
+   66 0000003E         ; ------------ COUNT_50_70 ------------
+   67 0000003E         ; R0 = pointer to array (bytes)
+   68 0000003E         ; R1 = length (elements)
+   69 0000003E         ; returns R0 = count of elements 50..70 inclusive
+   70 0000003E         COUNT_50_70
+                               PROC
+   71 0000003E F04F 0300       MOV              R3, #0      ; R3 = count
+   72 00000042         RNG_Loop
+   73 00000042 2900            CMP              R1, #0
+   74 00000044 D009            BEQ              RNG_Done
+   75 00000046 F810 2B01       LDRB             R2, [R0], #1
+   76 0000004A         
+   77 0000004A         ; if R2 < 50 -> skip
+   78 0000004A 2A32            CMP              R2, #50
+   79 0000004C D303            BLO              RNG_Skip
+   80 0000004E         
+   81 0000004E         ; if R2 > 70 -> skip
+   82 0000004E 2A46            CMP              R2, #70
+   83 00000050 D801            BHI              RNG_Skip
+   84 00000052         
+   85 00000052         ; otherwise 50 <= R2 <= 70
+   86 00000052 F103 0301       ADD              R3, R3, #1
+   87 00000056         
+   88 00000056         RNG_Skip
+   89 00000056 1E49            SUBS             R1, R1, #1
+   90 00000058 D1F3            BNE              RNG_Loop
+   91 0000005A         
+   92 0000005A         RNG_Done
+   93 0000005A 4618            MOV              R0, R3
+   94 0000005C 4770            BX               LR
+   95 0000005E                 ENDP
+   96 0000005E         
+   97 0000005E                 END
+              00 00 00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --cpu=Cortex-M4.fp --apcs=interwork --depend=.\fir
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+stexp.d -o.\firstexp.o -IE:\ARM\RV31\INC -IE:\ARM\CMSIS\Include -IE:\ARM\Inc\TI
+\TM4C123 --predefine="__EVAL SETA 1" --list=.\firstexp.lst firstexp.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Count50to70 00000019
+
+Symbol: Count50to70
+   Definitions
+      At line 13 in file firstexp.s
+   Uses
+      At line 35 in file firstexp.s
+Comment: Count50to70 used once
+CountGT70 00000015
+
+Symbol: CountGT70
+   Definitions
+      At line 12 in file firstexp.s
+   Uses
+      At line 27 in file firstexp.s
+Comment: CountGT70 used once
+Marks 00000000
+
+Symbol: Marks
+   Definitions
+      At line 8 in file firstexp.s
+   Uses
+      At line 23 in file firstexp.s
+      At line 31 in file firstexp.s
+
+MyData 00000000
+
+Symbol: MyData
+   Definitions
+      At line 5 in file firstexp.s
+   Uses
+      None
+Comment: MyData unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 16 in file firstexp.s
+   Uses
+      None
+Comment: .text unused
+COUNT_50_70 0000003E
+
+Symbol: COUNT_50_70
+   Definitions
+      At line 70 in file firstexp.s
+   Uses
+      At line 33 in file firstexp.s
+Comment: COUNT_50_70 used once
+COUNT_GT70 0000001E
+
+Symbol: COUNT_GT70
+   Definitions
+      At line 44 in file firstexp.s
+   Uses
+      At line 25 in file firstexp.s
+Comment: COUNT_GT70 used once
+GT_Done 0000003A
+
+Symbol: GT_Done
+   Definitions
+      At line 61 in file firstexp.s
+   Uses
+      At line 48 in file firstexp.s
+      At line 56 in file firstexp.s
+
+GT_Inc 00000034
+
+Symbol: GT_Inc
+   Definitions
+      At line 57 in file firstexp.s
+   Uses
+      At line 51 in file firstexp.s
+Comment: GT_Inc used once
+GT_Loop 00000022
+
+Symbol: GT_Loop
+   Definitions
+      At line 46 in file firstexp.s
+   Uses
+      At line 55 in file firstexp.s
+Comment: GT_Loop used once
+GT_Next 0000002E
+
+Symbol: GT_Next
+   Definitions
+      At line 53 in file firstexp.s
+   Uses
+      At line 59 in file firstexp.s
+Comment: GT_Next used once
+RNG_Done 0000005A
+
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: RNG_Done
+   Definitions
+      At line 92 in file firstexp.s
+   Uses
+      At line 74 in file firstexp.s
+Comment: RNG_Done used once
+RNG_Loop 00000042
+
+Symbol: RNG_Loop
+   Definitions
+      At line 72 in file firstexp.s
+   Uses
+      At line 90 in file firstexp.s
+Comment: RNG_Loop used once
+RNG_Skip 00000056
+
+Symbol: RNG_Skip
+   Definitions
+      At line 88 in file firstexp.s
+   Uses
+      At line 79 in file firstexp.s
+      At line 83 in file firstexp.s
+
+STOP 0000001C
+
+Symbol: STOP
+   Definitions
+      At line 38 in file firstexp.s
+   Uses
+      At line 38 in file firstexp.s
+Comment: STOP used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 21 in file firstexp.s
+   Uses
+      At line 17 in file firstexp.s
+Comment: main used once
+12 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+LEN 00000015
+
+Symbol: LEN
+   Definitions
+      At line 9 in file firstexp.s
+   Uses
+      At line 24 in file firstexp.s
+      At line 32 in file firstexp.s
+
+1 symbol
+351 symbols in table

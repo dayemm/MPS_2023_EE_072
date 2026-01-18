@@ -1,0 +1,22 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+E:\5TH SEMESTER\MPS LAB\SEVENSEGMENT\segment.uvproj
+Project File Date:  10/28/2025
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling startup_TM4C123.s...
+compiling segment.c...
+segment.c(128): warning:  #1-D: last line of file ends without a newline
+segment.c(121): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+Program Size: Code=876 RO-data=648 RW-data=0 ZI-data=608  
+".\segment.axf" - 0 Errors, 2 Warning(s).
+Load "E:\\5TH SEMESTER\\MPS LAB\\SEVENSEGMENT\\segment.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
